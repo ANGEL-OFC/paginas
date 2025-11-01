@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registrarse</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-100 to-blue-100">
+  <div class="bg-white p-8 rounded-2xl shadow-xl w-80">
+    <h1 class="text-2xl font-bold text-center bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent mb-6">Crear Cuenta</h1>
+
+    <input id="username" placeholder="Usuario" class="border p-2 w-full mb-3 rounded-lg" />
+    <input id="password" placeholder="Contraseña" type="password" class="border p-2 w-full mb-3 rounded-lg" />
+    <button id="registerBtn" class="bg-gradient-to-r from-purple-500 to-blue-500 w-full text-white p-2 rounded-lg font-semibold hover:opacity-90">Registrarme</button>
+
+    <p id="msg" class="text-sm text-gray-500 mt-3 text-center"></p>
+    <p class="text-center text-sm mt-4">¿Ya tienes cuenta?
+      <a href="login.html" class="text-blue-600 font-semibold hover:underline">Inicia sesión</a>
+    </p>
+  </div>
+
+  <script>
+    document.getElementById("registerBtn").onclick = async () => {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const msg = document.getElementById("msg");
+      msg.textContent = "Registrando...";
+      const res = await fetch("/api/register", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        msg.textContent = "Registro exitoso ✅";
+        setTimeout(() => window.location.href = "login.html", 1000);
+      } else {
+        msg.textContent = data.error || "Error al registrar";
+      }
+    };
+  </script>
+</body>
+</html>
